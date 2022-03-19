@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import json
 from BoWModel import Model
 import requests
-import os
+
 
 app = Flask(__name__)
 
