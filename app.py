@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import json
 from BoWModel import Model
+import requests
+import os
 
 app = Flask(__name__)
 
@@ -40,7 +42,17 @@ def add_record():
     svm_model.update_df(text, label)
     response = jsonify(text= text, label=label)
     return response
-    
+
+
+@app.route('/get_news', methods=["POST"])
+def get_news():
+    event = json.loads(request.data)
+    query = event['company_name']
+    news_params = {"q":query,"from":"2022-03-12","to":"2022-03-22", "sortBy":"popularity","apiKey":'c9df76e6b71341ad8e61647d9876254c'}
+    r = requests.get("https://newsapi.org/v2/everything", params=news_params)
+    news = r.json()
+    news_lst = news['articles']
+    return jsonify(articles=news_lst)
 
 
 if __name__ == "__main__":
